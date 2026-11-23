@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pokedex index{% endblock %}
+
+{% block body %}
+    <h1>Pokedex index</h1>
+    <div>
+        <a class="btn" href="{{ path('app_main') }}">Volver al menu</a>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Image</th>
+                <th>Number</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pokedex in pokedexes %}
+                <tr>
+                    <td>{{ pokedex.id }}</td>
+                    <td>{{ pokedex.name }}</td>
+                    <td><img src="{{ ('uploads/' ~ pokedex.image) }}" alt="" width="120" height="80"></td>
+                    <td>{{ pokedex.number }}</td>
+                    <td>
+                        <a href="{{ path('app_pokedex_show', {'id': pokedex.id}) }}">show</a>
+                        <a href="{{ path('app_pokedex_edit', {'id': pokedex.id}) }}">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">no records found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_pokedex_new') }}">Create new</a>
+{% endblock %}

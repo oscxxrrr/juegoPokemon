@@ -1,0 +1,108 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\PokedexRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: PokedexRepository::class)]
+class Pokedex
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
+    /**
+     * @var Collection<int, Pokemon>
+     */
+    #[ORM\OneToMany(targetEntity: Pokemon::class, mappedBy: 'pokedex')]
+    private Collection $pokemon;
+
+    #[ORM\Column]
+    private ?int $number = null;
+
+    public function __construct()
+    {
+        $this->pokemon = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Pokemon>
+     */
+    public function getPokemon(): Collection
+    {
+        return $this->pokemon;
+    }
+
+    public function addPokemon(Pokemon $pokemon): static
+    {
+        if (!$this->pokemon->contains($pokemon)) {
+            $this->pokemon->add($pokemon);
+            $pokemon->setPokedex($this);
+        }
+
+        return $this;
+    }
+
+    public function removePokemon(Pokemon $pokemon): static
+    {
+        if ($this->pokemon->removeElement($pokemon)) {
+            // set the owning side to null (unless already changed)
+            if ($pokemon->getPokedex() === $this) {
+                $pokemon->setPokedex(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getNumber(): ?int
+    {
+        return $this->number;
+    }
+
+    public function setNumber(int $number): static
+    {
+        $this->number = $number;
+
+        return $this;
+    }
+}

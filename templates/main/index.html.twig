@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inicio - Juego Pokémon{% endblock %}
+
+{% block body %}
+    <style>
+        .example-wrapper {
+            margin: 2em auto;
+            max-width: 800px;
+            width: 95%;
+            font: 18px/1.5 sans-serif;
+        }
+        .acciones {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            text-decoration: none;
+            border-radius: 6px;
+            border: 1px solid #333;
+            color: #111;
+        }
+        .btn-primary {
+            background: #111;
+            color: #fff;
+        }
+    </style>
+
+    <div class="example-wrapper">
+        <h1>Juego Pokémon</h1>
+        {% if app.user %}
+            <p>Has iniciado sesión como <strong>{{ app.user.userIdentifier }}</strong>.</p>
+            <div class="acciones">
+                <a class="btn" href="{{ path('app_logout') }}">Cerrar sesión</a>
+            </div>
+            <div>
+                <br>
+                <a class="btn" href="{{ path('app_pokedex_index') }}">Ir a la Pokedex</a>
+            </div>
+
+            {% if app.user.pokemon.count() == 0 %}
+                <p>Elige un pokemon aleatorio: </p>
+                {% for pokemon in random_pokemons %}
+                    <div>
+                        <a href="/pokemon/catch/{{ pokemon.id }}"><img src="pokemon.png" alt="{{ pokemon.name }}" width="100"></a>
+                    </div>
+                {% endfor %} 
+            {% endif %}
+
+            {% if app.user.pokemon.count() > 0 %}
+                <div class="acciones">
+                    <a class="btn" href="/pokemon/{id}">Ver mis pokemons</a>
+                </div>            
+            {% endif %}
+
+             
+        {% else %}
+            <p>Elige una opción para empezar:</p>
+            <div class="acciones">
+                <a class="btn btn-primary" href="{{ path('app_register') }}">Registrarse</a>
+                <a class="btn" href="{{ path('app_login') }}">Iniciar sesión</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
